@@ -32,17 +32,4 @@ class CharactersViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-/* void getCharactersMore() async {
-    if (loadMore) return;
-    if (currentPageIndex == _characterModel!.info!.pages) return;
-    setLoadMore(true);
-    int next = int.parse(_characterModel!.info!.next!.split("=")[1]);
-    final data = await _apiService.getAllCharacters(params: {"page": next});
-    setLoadMore(false);
-    currentPageIndex++;
-    _characterModel!.info = data!.info;
-    _characterModel!.character!.addAll(data.character!);
-
-    notifyListeners();
-  }*/
 }

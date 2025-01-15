@@ -6,16 +6,12 @@ import 'package:rick_morty_app/app/models/favourite_character_model.dart';
 import '../viewmodel/favourites_viewmodel.dart';
 
 class CharacterCardWidget extends StatefulWidget {
-  //Character character;
 
-  // bool isFavourite;
 
   FavouriteCharacterModel favouriteCharacterModel;
 
   CharacterCardWidget(
       {super.key,
-      //required this.character,
-      // required this.isFavourite
       required this.favouriteCharacterModel});
 
   @override
@@ -33,7 +29,6 @@ class _CharacterCardWidgetState extends State<CharacterCardWidget> {
       viewModel.addFavouriteCharacter(widget.favouriteCharacterModel.character);
       widget.favouriteCharacterModel.isFavourite = true;
     }
-    setState(() {});
   }
 
   @override
@@ -43,7 +38,7 @@ class _CharacterCardWidgetState extends State<CharacterCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<FavouritesViewModel>();
+
     Character favCharacter = widget.favouriteCharacterModel.character;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

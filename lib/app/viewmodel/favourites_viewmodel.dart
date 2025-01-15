@@ -14,8 +14,12 @@ class FavouritesViewModel extends ChangeNotifier {
   List<FavouriteCharacterModel> get favourites => _favourites;
 
   Future<void> getFavourites() async {
-    _favourites = await preferencesApi.getFavouriteCharacters();
-
+    try {
+      _favourites = await preferencesApi.getFavouriteCharacters();
+    } catch (e) {
+      _favourites = []; // Hata durumunda listeyi boş bırak
+      debugPrint("Error loading favourites: $e");
+    }
     notifyListeners();
   }
 

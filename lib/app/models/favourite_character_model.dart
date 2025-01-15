@@ -3,13 +3,13 @@ import 'character_model.dart';
 
 class FavouriteCharacterModel {
   Character character;
+  bool isFavourite;
 
   @override
   String toString() {
     return 'FavouriteCharacterModel{character: $character, isFavourite: $isFavourite}';
   }
 
-  bool isFavourite;
 
   FavouriteCharacterModel({required this.character, required this.isFavourite});
 

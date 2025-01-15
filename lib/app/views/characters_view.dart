@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/app/components/character_card_widget.dart';
+import 'package:rick_morty_app/app/services/preferences_service.dart';
 import 'package:rick_morty_app/app/viewmodel/characters_viewmodel.dart';
 import 'package:rick_morty_app/app/viewmodel/favourites_viewmodel.dart';
 
+import '../locator.dart';
 import '../models/character_model.dart';
 import '../models/favourite_character_model.dart';
 
@@ -19,6 +21,8 @@ class _CharactersViewState extends State<CharactersView> {
   final PagingController<int, Character> _pagingController =
       PagingController(firstPageKey: 0);
 
+  final prefService = locator<PreferencesService>();
+
   //int next = 1;
   List<int> favouritesList = [];
 
@@ -29,13 +33,6 @@ class _CharactersViewState extends State<CharactersView> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
-  }
-
-  bool isLoading = true;
-
-  void setLoading(bool value) {
-    isLoading = value;
-    setState(() {});
   }
 
   void _getFavourites() async {
@@ -58,7 +55,6 @@ class _CharactersViewState extends State<CharactersView> {
       } else {
         final nextPageKey = pageKey + characterList.length;
         _pagingController.appendPage(characterList, nextPageKey);
-        //next = int.parse(characterModel.info!.next!.split("=")[1]);
       }
     } catch (e) {
       _pagingController.error = e;
@@ -82,55 +78,37 @@ class _CharactersViewState extends State<CharactersView> {
         child: Column(
           children: [
             _searchInputWidget(context, viewModel: viewModel),
-            /*    viewModel.characterModel == null
-                ? const CircularProgressIndicator.adaptive()
-                : CharacterCardListView(
-                    characters: viewModel.characterModel!.character!,
-                    onLoadMore: () => viewModel.getCharactersMore(),
-                    loadMore: viewModel.loadMore,
-                  )*/
-            Consumer<CharactersViewModel>(
-              builder: (context, viewModel, child) {
-                return Flexible(
-                  child: PagedListView<int, Character>(
-                    pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<Character>(
-                      newPageProgressIndicatorBuilder: (BuildContext context) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      noItemsFoundIndicatorBuilder: (BuildContext context) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      itemBuilder: (context, item, index) {
-                        FavouriteCharacterModel favChar;
-                        final list =
-                            context.read<FavouritesViewModel>().favourites;
-                        favChar = FavouriteCharacterModel(
-                            character: item, isFavourite: false);
+            Flexible(
+              child: PagedListView<int, Character>(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<Character>(
+                  newPageProgressIndicatorBuilder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                  noItemsFoundIndicatorBuilder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                  itemBuilder: (context, item, index) {
 
-                        if (list.contains(favChar)) {
-                          favChar = FavouriteCharacterModel(
-                              character: item, isFavourite: true);
-                          print("true");
-                        }
-                        print("false");
-                        favChar = FavouriteCharacterModel(
-                            character: item, isFavourite: false);
+                    final list = context.watch<FavouritesViewModel>().favourites;
+                    bool isFavourite = list.any((element) => element.character.id == item.id);
 
-                        return CharacterCardWidget(
-                          /*  character: item,
-                          isFavourite: fav,*/
-                          favouriteCharacterModel: favChar,
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
+                    FavouriteCharacterModel favChar = FavouriteCharacterModel(
+                      character: item,
+                      isFavourite: isFavourite,
+                    );
+
+                    return CharacterCardWidget(
+
+                      favouriteCharacterModel: favChar,
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
