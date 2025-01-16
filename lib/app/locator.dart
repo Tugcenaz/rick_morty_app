@@ -8,7 +8,8 @@ GetIt locator = GetIt.instance;
 Future<void> setupLocator() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  locator.registerLazySingleton<PreferencesService>(() => PreferencesService(prefs:prefs));
+  locator.registerLazySingleton<PreferencesService>(
+      () => PreferencesService(prefs: prefs));
 
   locator.registerLazySingleton<ApiService>(() => ApiService());
 }

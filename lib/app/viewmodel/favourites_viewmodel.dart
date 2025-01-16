@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/app/locator.dart';
-import 'package:rick_morty_app/app/models/favourite_character_model.dart';
 import 'package:rick_morty_app/app/services/api_service.dart';
 import 'package:rick_morty_app/app/services/preferences_service.dart';
 import '../models/character_model.dart';
@@ -8,30 +7,31 @@ import '../models/character_model.dart';
 class FavouritesViewModel extends ChangeNotifier {
   final preferencesApi = locator<PreferencesService>();
   final apiService = locator<ApiService>();
+  List<int> savedCharacters = [];
+  List<Character>? favouriteCharacters = [];
 
-  List<FavouriteCharacterModel> _favourites = [];
 
-  List<FavouriteCharacterModel> get favourites => _favourites;
+  void getSavedCharacter() async {
+    savedCharacters = preferencesApi.getSavedCharacters();
+    getMultipleCharacters();
+  }
 
-  Future<void> getFavourites() async {
-    try {
-      _favourites = await preferencesApi.getFavouriteCharacters();
-    } catch (e) {
-      _favourites = []; // Hata durumunda listeyi boş bırak
-      debugPrint("Error loading favourites: $e");
-    }
+  void getMultipleCharacters() async {
+    favouriteCharacters =
+        await apiService.getMultipleCharacters(savedCharacters);
+
     notifyListeners();
   }
 
-  Future<void> addFavouriteCharacter(Character character) async {
-    final favCharacter =
-        FavouriteCharacterModel(character: character, isFavourite: true);
-    await preferencesApi.addFavouriteCharacter(favCharacter);
-    await getFavourites();
+  void saveCharacter(int id) {
+    preferencesApi.saveCharacter(id);
+    getSavedCharacter();
+    notifyListeners();
   }
 
-  Future<void> removeFavouriteCharacter({required int id}) async {
-    await preferencesApi.removeFavouriteCharacter(id);
-    await getFavourites();
+  void removeCharacter(int id) {
+    preferencesApi.removeCharacter(id);
+    getSavedCharacter();
+    notifyListeners();
   }
 }

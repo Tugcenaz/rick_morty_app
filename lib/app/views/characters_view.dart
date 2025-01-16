@@ -8,7 +8,6 @@ import 'package:rick_morty_app/app/viewmodel/favourites_viewmodel.dart';
 
 import '../locator.dart';
 import '../models/character_model.dart';
-import '../models/favourite_character_model.dart';
 
 class CharactersView extends StatefulWidget {
   const CharactersView({super.key});
@@ -23,7 +22,6 @@ class _CharactersViewState extends State<CharactersView> {
 
   final prefService = locator<PreferencesService>();
 
-  //int next = 1;
   List<int> favouritesList = [];
 
   @override
@@ -36,7 +34,11 @@ class _CharactersViewState extends State<CharactersView> {
   }
 
   void _getFavourites() async {
-    await context.read<FavouritesViewModel>().getFavourites();
+    context.read<FavouritesViewModel>().getSavedCharacter();
+  //  favouritesList = context.read<FavouritesViewModel>().savedCharacters;
+    //  favouritesList = prefService.getSavedCharacters();
+
+   // setState(() {});
   }
 
   Future<void> _fetchPage(int pageKey) async {
@@ -71,6 +73,7 @@ class _CharactersViewState extends State<CharactersView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CharactersViewModel>();
+    final favViewModel = context.watch<FavouritesViewModel>();
     return Scaffold(
       body: Center(
           child: Padding(
@@ -93,18 +96,11 @@ class _CharactersViewState extends State<CharactersView> {
                     );
                   },
                   itemBuilder: (context, item, index) {
-
-                    final list = context.watch<FavouritesViewModel>().favourites;
-                    bool isFavourite = list.any((element) => element.character.id == item.id);
-
-                    FavouriteCharacterModel favChar = FavouriteCharacterModel(
-                      character: item,
-                      isFavourite: isFavourite,
-                    );
-
+                    bool isFavorited =
+                        favViewModel.savedCharacters.contains(item.id);
                     return CharacterCardWidget(
-
-                      favouriteCharacterModel: favChar,
+                      character: item,
+                      isFavourite: isFavorited,
                     );
                   },
                 ),
