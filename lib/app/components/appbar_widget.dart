@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 
-AppBar appBar({required String title, required Widget actions}) {
-  return AppBar(
-    title: Text(title,
-        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
-    actions: [actions],
-  );
+class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
+  String title;
+
+  bool isTransparentBackground;
+
+  AppbarWidget(
+      {super.key, required this.title, this.isTransparentBackground = false});
+
+  @override
+  PreferredSizeWidget build(BuildContext context) {
+    return AppBar(
+      centerTitle: false,
+      backgroundColor: isTransparentBackground ? Colors.transparent : null,
+      title: Text(title,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+      actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.settings))],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(56);
 }

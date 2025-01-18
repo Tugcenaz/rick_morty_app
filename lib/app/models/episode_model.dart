@@ -1,62 +1,44 @@
 import 'dart:convert';
 
-import 'info_model.dart';
-EpisodeModel episodeModelFromJson(String str) => EpisodeModel.fromJson(json.decode(str));
+EpisodeModel episodeModelFromJson(String str) =>
+    EpisodeModel.fromJson(json.decode(str));
+
 String episodeModelToJson(EpisodeModel data) => json.encode(data.toJson());
+
 class EpisodeModel {
   EpisodeModel({
-      this.info, 
-      this.results,});
+    this.id,
+    this.name,
+    this.airDate,
+    this.episode,
+    this.characters,
+    this.url,
+    this.created,
+  });
 
   EpisodeModel.fromJson(dynamic json) {
-    info = json['info'] != null ? Info.fromJson(json['info']) : null;
-    if (json['results'] != null) {
-      results = [];
-      json['results'].forEach((v) {
-        results?.add(Results.fromJson(v));
-      });
-    }
-  }
-  Info? info;
-  List<Results>? results;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (info != null) {
-      map['info'] = info?.toJson();
-    }
-    if (results != null) {
-      map['results'] = results?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
-
-}
-
-Results resultsFromJson(String str) => Results.fromJson(json.decode(str));
-String resultsToJson(Results data) => json.encode(data.toJson());
-class Results {
-  Results({
-      this.id, 
-      this.name, 
-      this.airDate, 
-      this.episode, 
-      this.characters, 
-      this.url, 
-      this.created,});
-
-  Results.fromJson(dynamic json) {
+    final episodeString = json['episode'] as String;
+    final episodeList = episodeString.replaceAll('S', '').split('E');
     id = json['id'];
     name = json['name'];
     airDate = json['air_date'];
-    episode = json['episode'];
-    characters = json['characters'] != null ? json['characters'].cast<String>() : [];
+    episode =
+        'Sezon ${int.parse(episodeList.first)} Bölüm ${int.parse(episodeList.last)}';
+    characters =
+        json['characters'] != null ? json['characters'].cast<String>() : [];
     url = json['url'];
     created = json['created'];
   }
+
   int? id;
   String? name;
   String? airDate;
+
+  @override
+  String toString() {
+    return 'EpisodeModel{id: $id, name: $name, airDate: $airDate, episode: $episode, characters: $characters, url: $url, created: $created}';
+  }
+
   String? episode;
   List<String>? characters;
   String? url;
@@ -73,6 +55,4 @@ class Results {
     map['created'] = created;
     return map;
   }
-
 }
-

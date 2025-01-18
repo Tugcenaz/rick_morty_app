@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rick_morty_app/app/models/character_model.dart';
+import 'package:rick_morty_app/app/models/episode_model.dart';
 
 class ApiService {
   final dio = Dio(BaseOptions(
@@ -39,7 +40,7 @@ class ApiService {
 
   Future<List<Character>?> getMultipleCharacters(List<int> idList) async {
     try {
-      if(idList.isEmpty){
+      if (idList.isEmpty) {
         return null;
       }
       final response = await clientGet(apiPath: "/character/$idList");
@@ -47,12 +48,35 @@ class ApiService {
         final List<Character> list = (response.data as List)
             .map((toElement) => Character.fromJson(toElement))
             .toList();
-        print(list);
         return list;
       }
       return null;
     } catch (e) {
-      return Future.error("Error: ${e.toString()} haahaaa");
+      return Future.error("Error: ${e.toString()} ");
+    }
+  }
+
+  List<int> episodeIdList = [];
+
+  Future<List<EpisodeModel>?> getMultipleEpisode(
+      List<String> episodeUrl) async {
+    try {
+      final episodeNumber =
+          episodeUrl.map((element) => element.split("/").last).toList();
+      episodeIdList = episodeNumber.map((e) => int.parse(e)).toList();
+
+      final response = await clientGet(apiPath: "/episode/$episodeIdList");
+
+      if (response != null) {
+        final List<EpisodeModel> episodeList = (response.data as List)
+            .map((element) => EpisodeModel.fromJson(element))
+            .toList();
+        episodeIdList = [];
+        return episodeList;
+      }
+      return null;
+    } catch (e) {
+      return Future.error("Error: ${e.toString()} ");
     }
   }
 }

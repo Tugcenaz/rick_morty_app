@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../components/appbar_widget.dart';
+import 'package:rick_morty_app/app/components/appbar_widget.dart';
 
 class AppView extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -10,8 +10,7 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
-      //hepsinde aynı appbar olsun istemezsem bunu silip diğer her sayfaya appbar eklicem
+
       body: navigationShell,
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
@@ -73,18 +72,6 @@ class AppView extends StatelessWidget {
             : Theme.of(context).colorScheme.tertiary,
       ),
       label: title,
-    );
-  }
-
-  AppBar buildAppBar() {
-    return appBar(
-      title: 'Rick and Morty',
-      actions: IconButton(
-        onPressed: () {},
-        icon: const Icon(
-          Icons.settings,
-        ),
-      ),
     );
   }
 }

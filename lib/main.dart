@@ -6,6 +6,7 @@ import 'package:rick_morty_app/core/theme.dart';
 
 import 'app/locator.dart';
 import 'app/router.dart';
+import 'app/viewmodel/character_profile_viewmodel.dart';
 import 'app/viewmodel/characters_viewmodel.dart';
 
 void main() async {
@@ -17,6 +18,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => CharactersViewModel()),
         ChangeNotifierProvider(create: (context) => FavouritesViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => CharacterProfileViewmodel()),
       ],
       child: const MyApp(),
     ),

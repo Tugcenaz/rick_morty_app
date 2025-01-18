@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/app/models/character_model.dart';
+import 'package:rick_morty_app/app/router.dart';
 
 import '../viewmodel/favourites_viewmodel.dart';
 
@@ -39,55 +42,64 @@ class _CharacterCardWidgetState extends State<CharacterCardWidget> {
   @override
   Widget build(BuildContext context) {
     Character character = widget.character;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Stack(
-        alignment: AlignmentDirectional.topEnd,
-        children: [
-          Container(
-            height: 150,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.network(character.image ?? ''),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildText(
-                          context: context,
-                          text: character.name ?? '',
-                          fontWeight: FontWeight.w500),
-                      infoWidget(
-                          context: context,
-                          title: 'Köken',
-                          val: character.origin?.name ?? 'aa'),
-                      infoWidget(
-                          context: context,
-                          title: 'Durum',
-                          val: character.status ?? ''),
-                    ],
+    return Bounceable(
+      onTap: () {
+        //tıklama anında buradaki characteri başka sayfaya aktarıcaz
+        context.push(AppRoutes.characterProfile,extra: character);
+        print("tapped");
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Stack(
+          alignment: AlignmentDirectional.topEnd,
+          children: [
+            Container(
+              height: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Hero(tag: character.image!,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: Image.network(character.image ?? ''),
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildText(
+                            context: context,
+                            text: character.name ?? '',
+                            fontWeight: FontWeight.w500),
+                        infoWidget(
+                            context: context,
+                            title: 'Köken',
+                            val: character.origin?.name ?? 'aa'),
+                        infoWidget(
+                            context: context,
+                            title: 'Durum',
+                            val: character.status ?? ''),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          IconButton(
-              onPressed: () => favouriteCharacter(),
-              icon: Icon(
-                widget.isFavourite ? Icons.bookmark : Icons.bookmark_border,
-                size: 34,
-              )),
-        ],
+            IconButton(
+                onPressed: () => favouriteCharacter(),
+                icon: Icon(
+                  widget.isFavourite ? Icons.bookmark : Icons.bookmark_border,
+                  size: 34,
+                )),
+          ],
+        ),
       ),
     );
   }

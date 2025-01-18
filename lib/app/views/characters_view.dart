@@ -6,6 +6,7 @@ import 'package:rick_morty_app/app/services/preferences_service.dart';
 import 'package:rick_morty_app/app/viewmodel/characters_viewmodel.dart';
 import 'package:rick_morty_app/app/viewmodel/favourites_viewmodel.dart';
 
+import '../components/appbar_widget.dart';
 import '../locator.dart';
 import '../models/character_model.dart';
 
@@ -75,6 +76,9 @@ class _CharactersViewState extends State<CharactersView> {
     final viewModel = context.watch<CharactersViewModel>();
     final favViewModel = context.watch<FavouritesViewModel>();
     return Scaffold(
+      appBar: AppbarWidget(
+        title: "Rick and Morty",
+      ),
       body: Center(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
