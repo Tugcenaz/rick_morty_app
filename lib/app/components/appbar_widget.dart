@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
-  String title;
+  final String title;
 
-  bool isTransparentBackground;
+  final bool isTransparentBackground;
 
-  AppbarWidget(
+  const AppbarWidget(
       {super.key, required this.title, this.isTransparentBackground = false});
 
   @override

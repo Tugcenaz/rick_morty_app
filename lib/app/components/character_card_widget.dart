@@ -45,7 +45,7 @@ class _CharacterCardWidgetState extends State<CharacterCardWidget> {
     return Bounceable(
       onTap: () {
         //tıklama anında buradaki characteri başka sayfaya aktarıcaz
-        context.push(AppRoutes.characterProfile,extra: character);
+        context.push(AppRoutes.characterProfile, extra: character);
         print("tapped");
       },
       child: Padding(
@@ -62,7 +62,8 @@ class _CharacterCardWidgetState extends State<CharacterCardWidget> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Hero(tag: character.image!,
+                  Hero(
+                    tag: character.image!,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: Image.network(character.image ?? ''),

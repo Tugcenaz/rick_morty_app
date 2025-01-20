@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'info_model.dart';
+
 EpisodeModel episodeModelFromJson(String str) =>
     EpisodeModel.fromJson(json.decode(str));
 
@@ -7,6 +9,41 @@ String episodeModelToJson(EpisodeModel data) => json.encode(data.toJson());
 
 class EpisodeModel {
   EpisodeModel({
+    this.info,
+    this.episode,
+  });
+
+  EpisodeModel.fromJson(dynamic json) {
+    info = json['info'] != null ? Info.fromJson(json['info']) : null;
+    if (json['results'] != null) {
+      episode = [];
+      json['results'].forEach((v) {
+        episode?.add(Episode.fromJson(v));
+      });
+    }
+  }
+
+  Info? info;
+  List<Episode>? episode;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    if (info != null) {
+      map['info'] = info?.toJson();
+    }
+    if (episode != null) {
+      map['results'] = episode?.map((v) => v.toJson()).toList();
+    }
+    return map;
+  }
+}
+
+Episode resultsFromJson(String str) => Episode.fromJson(json.decode(str));
+
+String resultsToJson(Episode data) => json.encode(data.toJson());
+
+class Episode {
+  Episode({
     this.id,
     this.name,
     this.airDate,
@@ -16,14 +53,14 @@ class EpisodeModel {
     this.created,
   });
 
-  EpisodeModel.fromJson(dynamic json) {
+  Episode.fromJson(dynamic json) {
     final episodeString = json['episode'] as String;
     final episodeList = episodeString.replaceAll('S', '').split('E');
     id = json['id'];
     name = json['name'];
     airDate = json['air_date'];
     episode =
-        'Sezon ${int.parse(episodeList.first)} Bölüm ${int.parse(episodeList.last)}';
+        "Sezon ${int.parse(episodeList.first)} Bölüm ${int.parse(episodeList.last)}";
     characters =
         json['characters'] != null ? json['characters'].cast<String>() : [];
     url = json['url'];
@@ -33,12 +70,6 @@ class EpisodeModel {
   int? id;
   String? name;
   String? airDate;
-
-  @override
-  String toString() {
-    return 'EpisodeModel{id: $id, name: $name, airDate: $airDate, episode: $episode, characters: $characters, url: $url, created: $created}';
-  }
-
   String? episode;
   List<String>? characters;
   String? url;

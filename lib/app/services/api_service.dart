@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rick_morty_app/app/models/character_model.dart';
 import 'package:rick_morty_app/app/models/episode_model.dart';
+import 'package:rick_morty_app/app/models/location_model.dart';
 
 class ApiService {
   final dio = Dio(BaseOptions(
@@ -58,21 +59,44 @@ class ApiService {
 
   List<int> episodeIdList = [];
 
-  Future<List<EpisodeModel>?> getMultipleEpisode(
-      List<String> episodeUrl) async {
+  Future<List<Episode>?> getMultipleEpisode(List<String> episodeUrl) async {
     try {
       final episodeNumber =
           episodeUrl.map((element) => element.split("/").last).toList();
       episodeIdList = episodeNumber.map((e) => int.parse(e)).toList();
 
       final response = await clientGet(apiPath: "/episode/$episodeIdList");
-
       if (response != null) {
-        final List<EpisodeModel> episodeList = (response.data as List)
-            .map((element) => EpisodeModel.fromJson(element))
+        final List<Episode> episodeList = (response.data as List)
+            .map((element) => Episode.fromJson(element))
             .toList();
-        episodeIdList = [];
         return episodeList;
+      }
+      return null;
+    } catch (e) {
+      return Future.error("Error: ${e.toString()} ");
+    }
+  }
+
+  Future<LocationModel?> getLocations({Map<String, dynamic>? params}) async {
+    try {
+      final response = await clientGet(apiPath: '/location', arguments: params);
+      if (response != null) {
+        LocationModel locationModel = LocationModel.fromJson(response.data);
+        return locationModel;
+      }
+      return null;
+    } catch (e) {
+      return Future.error("Error: ${e.toString()} ");
+    }
+  }
+
+  Future<EpisodeModel?> getAllEpisodes({Map<String, dynamic>? params}) async {
+    try {
+      final response = await clientGet(apiPath: '/episode', arguments: params);
+      if (response != null) {
+        final episodeModel = EpisodeModel.fromJson(response.data);
+        return episodeModel;
       }
       return null;
     } catch (e) {

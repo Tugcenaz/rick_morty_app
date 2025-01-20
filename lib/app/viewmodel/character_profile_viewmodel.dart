@@ -6,17 +6,17 @@ import '../locator.dart';
 
 class CharacterProfileViewmodel extends ChangeNotifier {
   final apiService = locator.get<ApiService>();
-  List<EpisodeModel>? _episodes = [];
-  List<EpisodeModel>? get episodes => _episodes;
+  List<Episode>? _episodeList = [];
+
+  List<Episode>? get episodeList => _episodeList;
 
   void getEpisodes(List<String> episodeUrl) async {
-    _episodes = await apiService.getMultipleEpisode(episodeUrl);
-
+    _episodeList = await apiService.getMultipleEpisode(episodeUrl);
     notifyListeners();
   }
 
   void clearEpisodes() {
-    _episodes = [];
+    _episodeList = [];
     notifyListeners();
   }
 }

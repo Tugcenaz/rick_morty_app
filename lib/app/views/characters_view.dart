@@ -7,7 +7,6 @@ import 'package:rick_morty_app/app/viewmodel/characters_viewmodel.dart';
 import 'package:rick_morty_app/app/viewmodel/favourites_viewmodel.dart';
 
 import '../components/appbar_widget.dart';
-import '../locator.dart';
 import '../models/character_model.dart';
 
 class CharactersView extends StatefulWidget {
@@ -21,7 +20,7 @@ class _CharactersViewState extends State<CharactersView> {
   final PagingController<int, Character> _pagingController =
       PagingController(firstPageKey: 0);
 
-  final prefService = locator<PreferencesService>();
+  //final prefService = locator<PreferencesService>();
 
   List<int> favouritesList = [];
 

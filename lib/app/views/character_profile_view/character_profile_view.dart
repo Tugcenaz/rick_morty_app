@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_morty_app/app/components/appbar_widget.dart';
-import 'package:rick_morty_app/app/components/character_card_widget.dart';
-import 'package:rick_morty_app/app/models/episode_model.dart';
 import 'package:rick_morty_app/app/viewmodel/character_profile_viewmodel.dart';
-
+import '../../components/decorated_container.dart';
 import '../../models/character_model.dart';
 
 class CharacterProfileView extends StatefulWidget {
   Character character;
-
 
   CharacterProfileView({super.key, required this.character});
 
@@ -18,12 +15,12 @@ class CharacterProfileView extends StatefulWidget {
 }
 
 class _CharacterProfileViewState extends State<CharacterProfileView> {
-
-
   @override
   void initState() {
     super.initState();
-    context.read<CharacterProfileViewmodel>().getEpisodes(widget.character.episode??[]);
+    context
+        .read<CharacterProfileViewmodel>()
+        .getEpisodes(widget.character.episode ?? []);
   }
 
   @override
@@ -31,18 +28,11 @@ class _CharacterProfileViewState extends State<CharacterProfileView> {
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppbarWidget(
+        appBar: const AppbarWidget(
           isTransparentBackground: true,
           title: "Karakter",
         ),
-        body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              alignment: Alignment.topCenter,
-              fit: BoxFit.fitWidth,
-              image: AssetImage("assets/images/background_image.png"),
-            ),
-          ),
+        body: DecoratedContainer(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -117,7 +107,7 @@ class _CharacterProfileViewState extends State<CharacterProfileView> {
       return Expanded(
         child: ListView.separated(
           padding: const EdgeInsets.only(top: 12),
-          itemCount: viewModel.episodes!.length,
+          itemCount: viewModel.episodeList!.length,
           itemBuilder: (context, index) {
             return ListTile(
               leading: const Icon(
@@ -125,10 +115,10 @@ class _CharacterProfileViewState extends State<CharacterProfileView> {
                 size: 45,
               ),
               title: Text(
-                viewModel.episodes?[index].name ?? '',
+                viewModel.episodeList?[index].name??'',
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
-              subtitle: Text(viewModel.episodes?[index].episode ?? ''),
+              subtitle: Text(viewModel.episodeList?[index].episode ?? ''),
               trailing: IconButton(
                   onPressed: () {}, icon: const Icon(Icons.arrow_forward_ios)),
             );

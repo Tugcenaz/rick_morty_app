@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rick_morty_app/app/components/appbar_widget.dart';
 
 class AppView extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
